@@ -80,6 +80,18 @@
   }
   .muted{color:var(--muted);}
   section{padding:76px 0;}
+  section > .wrap{text-align:center;}
+  section > .wrap > .eyebrow{text-align:center;}
+  section > .wrap > h2{margin:0 auto 18px;max-width:640px;}
+  section > .wrap > .lede{margin:0 auto;text-align:center;}
+  .tags{justify-content:center;}
+  .social-row{justify-content:center;}
+  .ledger{max-width:640px;margin-left:auto;margin-right:auto;text-align:left;}
+  .rape-list{max-width:520px;margin-left:auto;margin-right:auto;text-align:left;}
+  .local-card{text-align:left;}
+  .contact-grid{text-align:left;}
+  #banners-grid, #banners-grid-past{text-align:left;}
+  .aside-note, .rape-note{text-align:left;max-width:640px;margin-left:auto;margin-right:auto;}
   .divider{
     display:flex;align-items:center;justify-content:center;gap:14px;
     color:var(--gold);opacity:.8;margin:0 0 8px;
@@ -181,6 +193,18 @@
     border-left:2px solid var(--gold);padding-left:14px;
   }
 
+  /* ---------- venda de rapé ---------- */
+  .rape-list{
+    list-style:none;margin:24px 0 0;padding:0;columns:2;column-gap:36px;
+  }
+  .rape-list li{
+    font-size:14.5px;padding:8px 0;border-bottom:1px solid var(--line);break-inside:avoid;
+  }
+  .rape-alquimia-label{
+    font-family:"Fraunces",serif;font-weight:600;font-size:16px;margin:32px 0 4px;color:var(--gold-strong,var(--gold));
+  }
+  .rape-note{font-size:14px;color:var(--muted);margin-top:8px;}
+
   /* ---------- programação / banners ---------- */
   #banners-grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;margin-top:32px;
@@ -197,6 +221,18 @@
   .banner-sub{font-size:13.5px;color:var(--muted);margin:0 0 8px;}
   .banner-price{font-family:"Space Mono",monospace;font-size:12.5px;color:var(--gold-strong,var(--gold));margin:0;}
   #banners-empty{margin-top:28px;color:var(--muted);font-size:14.5px;font-style:italic;}
+  .past-toggle-row{margin-top:32px;}
+  .btn-toggle-past{
+    font-family:"Space Mono",monospace;font-size:12.5px;background:none;cursor:pointer;
+    border:1px solid var(--line);color:var(--muted);padding:9px 16px;border-radius:100px;
+  }
+  .btn-toggle-past:hover{border-color:var(--gold);color:var(--gold-strong,var(--gold));}
+  #banners-grid-past{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;margin-top:22px;
+  }
+  #banners-grid-past[hidden]{display:none;}
+  #banners-grid-past .banner-card{opacity:.62;filter:grayscale(.35);}
+  #banners-grid-past .banner-card:hover{opacity:.9;filter:grayscale(.1);}
   .btn-remove{
     margin-top:12px;font-family:"Space Mono",monospace;font-size:11.5px;
     background:none;border:1px solid var(--line);color:var(--muted);padding:6px 10px;border-radius:100px;cursor:pointer;
@@ -205,7 +241,7 @@
 
   /* ---------- local ---------- */
   .local-card{
-    display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;justify-content:space-between;
+    display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:center;
     background:var(--bg-panel);border:1px solid var(--line);padding:28px 30px;margin-top:30px;border-radius:4px;
   }
   .local-addr{font-size:17px;}
@@ -215,7 +251,7 @@
   .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:30px;}
   .contact-card{border:1px solid var(--line);padding:22px;border-radius:4px;}
   .contact-card .who{font-family:"Fraunces",serif;font-weight:600;font-size:17px;margin-bottom:4px;}
-  .contact-card a.num{font-family:"Space Mono",monospace;font-size:14px;color:var(--gold-strong,var(--gold));text-decoration:none;}
+  .contact-card a.num{font-family:"Space Mono",monospace;font-size:14px;color:var(--gold-strong,var(--gold));text-decoration:none;overflow-wrap:anywhere;word-break:break-word;}
   .social-row{display:flex;gap:16px;margin-top:26px;font-size:14px;}
   .social-row a{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;}
 
@@ -272,6 +308,24 @@
   .status-pill.expired{color:var(--muted);}
   .status-pill.live{color:var(--gold-strong,var(--gold));border-color:var(--gold);}
   hr.sep{border:none;border-top:1px solid var(--line);margin:26px 0;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 640px){
+    section{padding:56px 0;}
+    .wrap{padding:0 18px;}
+    header.site .wrap{padding-top:10px;padding-bottom:10px;flex-wrap:wrap;gap:8px;justify-content:center;}
+    .brand{font-size:14.5px;}
+    .hero-scene{height:auto;min-height:0;padding:120px 0 56px;}
+    .hero-title{font-size:clamp(28px,9vw,40px);}
+    .hero-sub{font-size:15.5px;}
+    .ledger-row{grid-template-columns:1fr;gap:4px;text-align:left;padding:16px 0;}
+    .ledger-time,.ledger-what{text-align:left;}
+    .rape-list{columns:1;}
+    .local-card{flex-direction:column;text-align:center;padding:24px 20px;}
+    .local-addr{text-align:center;}
+    #banners-grid,#banners-grid-past{grid-template-columns:1fr;}
+    .contact-grid{grid-template-columns:1fr;}
+  }
 
   /* ---------- lightbox ---------- */
   .lightbox{
@@ -375,6 +429,7 @@
         <span class="tag">Sagrado Feminino</span>
         <span class="tag">Ritual do Som</span>
         <span class="tag">Banda Filhos do Lobo</span>
+        <span class="tag">Venda de Rapé</span>
       </div>
     </div>
   </section>
@@ -404,16 +459,70 @@
     </div>
   </section>
 
-  <section id="programacao">
+  <section id="rapes">
+    <div class="wrap">
+      <p class="eyebrow">Venda de rapé</p>
+      <h2 style="font-size:30px;">Rapés preparados pela casa</h2>
+      <p class="lede" style="font-size:16px;max-width:640px;">O templo também vende rapés e tabaco feitos por eles. A lista abaixo é a mais recente que recebemos — como o estoque varia, confirme disponibilidade antes de fechar o pedido.</p>
+      <ul class="rape-list">
+        <li>Alfazema e Alecrim</li>
+        <li>Jenipapo</li>
+        <li>Aroeira</li>
+        <li>Jurema Branca</li>
+        <li>Artemísia</li>
+        <li>Jurema Preta</li>
+        <li>Cacau</li>
+        <li>Mulateiro</li>
+        <li>Cacto</li>
+        <li>Mulungu</li>
+        <li>Caneleiro</li>
+        <li>Murici</li>
+        <li>Caatinga de mulata</li>
+        <li>Paricá</li>
+        <li>Canela de velho</li>
+        <li>Sálvia</li>
+        <li>Cumaru</li>
+        <li>Sete Ervas</li>
+        <li>Emburana</li>
+        <li>Samaúma</li>
+        <li>Envira Ferro</li>
+        <li>Tsunu</li>
+        <li>Jatobá</li>
+        <li>Tsunu Menta</li>
+      </ul>
+      <p class="rape-alquimia-label">Rapé Alquimia Lobo Guardião</p>
+      <ul class="rape-list">
+        <li>Clã das Lobas</li>
+        <li>Mulher Medicina</li>
+        <li>Rapé Tio Beto</li>
+        <li>Fênix</li>
+        <li>Rapé do Vô</li>
+      </ul>
+      <div class="local-card">
+        <div class="local-addr">
+          <strong>R$ 50 o rapé · R$ 20 o tabaco</strong>
+          Chave Pix: temploloboguardiao<wbr>@gmail.com
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5511959423073" target="_blank" rel="noopener">Pedir no WhatsApp</a>
+      </div>
+      <p class="rape-note">Pedidos com Giovanna Garcia. Depois de pagar o Pix, envie o comprovante pra ela. Pra combinar a retirada, fale com Alexandre ou Eliane (contatos mais abaixo).</p>
+    </div>
+  </section>
+
+  <section id="programacao" style="background:var(--bg-panel);">
     <div class="wrap">
       <p class="eyebrow">Próximos encontros</p>
       <h2 style="font-size:30px;">Programação e avisos</h2>
       <div id="banners-grid"></div>
       <p id="banners-empty" hidden>Nenhum aviso especial no momento — confira o ritmo semanal acima ou chame no WhatsApp para saber a próxima data.</p>
+      <div class="past-toggle-row" id="past-toggle-row" hidden>
+        <button type="button" class="btn-toggle-past" id="btn-toggle-past" aria-expanded="false">Mostrar eventos anteriores (<span id="past-count">0</span>)</button>
+        <div id="banners-grid-past" hidden></div>
+      </div>
     </div>
   </section>
 
-  <section id="local" style="background:var(--bg-panel);">
+  <section id="local">
     <div class="wrap">
       <p class="eyebrow">Onde estamos</p>
       <h2 style="font-size:30px;">Chegando na casa</h2>
@@ -427,7 +536,7 @@
     </div>
   </section>
 
-  <section id="contato">
+  <section id="contato" style="background:var(--bg-panel);">
     <div class="wrap">
       <p class="eyebrow">Fale com a casa</p>
       <h2 style="font-size:30px;">Contato</h2>
@@ -442,7 +551,7 @@
         </div>
         <div class="contact-card">
           <p class="who">E-mail</p>
-          <a class="num" href="mailto:temploloboguardiao@gmail.com">temploloboguardiao@gmail.com</a>
+          <a class="num" href="mailto:temploloboguardiao@gmail.com">temploloboguardiao<wbr>@gmail.com</a>
         </div>
       </div>
       <div class="social-row">
@@ -559,8 +668,9 @@
   }
 
   function isLive(b){
-    if(!b.expires) return true;
-    var end = new Date(b.expires + "T23:59:59-03:00").getTime();
+    var effectiveEnd = b.expires || b.date;
+    if(!effectiveEnd) return true;
+    var end = new Date(effectiveEnd + "T23:59:59-03:00").getTime();
     return end >= Date.now();
   }
 
@@ -587,13 +697,27 @@
     var grid = document.getElementById("banners-grid");
     var empty = document.getElementById("banners-empty");
     var live = sortedBanners(state.banners.filter(isLive));
+    var past = sortedBanners(state.banners.filter(function(b){ return !isLive(b); })).reverse();
+
     if(!live.length){
       grid.innerHTML = "";
       empty.hidden = false;
-      return;
+    }else{
+      empty.hidden = true;
+      grid.innerHTML = live.map(bannerCardHtml).join("");
     }
-    empty.hidden = true;
-    grid.innerHTML = live.map(bannerCardHtml).join("");
+
+    var toggleRow = document.getElementById("past-toggle-row");
+    var pastGrid = document.getElementById("banners-grid-past");
+    document.getElementById("past-count").textContent = past.length;
+    if(!past.length){
+      toggleRow.hidden = true;
+      pastGrid.hidden = true;
+      pastGrid.innerHTML = "";
+    }else{
+      toggleRow.hidden = false;
+      pastGrid.innerHTML = past.map(bannerCardHtml).join("");
+    }
   }
 
   function renderAdminList(){
@@ -766,11 +890,20 @@
     document.getElementById("lightbox").hidden = true;
     document.getElementById("lightbox-img").src = "";
   }
-  document.getElementById("banners-grid").addEventListener("click", function(e){
+  document.getElementById("programacao").addEventListener("click", function(e){
     var card = e.target.closest("[data-open-img]");
     if(!card) return;
     var img = card.querySelector("img");
     if(img) openLightbox(img.src, img.alt);
+  });
+
+  document.getElementById("btn-toggle-past").addEventListener("click", function(){
+    var pastGrid = document.getElementById("banners-grid-past");
+    var expanded = !pastGrid.hidden;
+    pastGrid.hidden = expanded;
+    this.setAttribute("aria-expanded", String(!expanded));
+    var count = document.getElementById("past-count").textContent;
+    this.childNodes[0].textContent = expanded ? "Mostrar eventos anteriores (" : "Ocultar eventos anteriores (";
   });
   document.getElementById("lightbox").addEventListener("click", function(e){
     if(e.target.id === "lightbox" ) closeLightbox();
