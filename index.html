@@ -483,10 +483,10 @@
       <p class="muted" id="admin-capability-note"></p>
 
       <hr class="sep">
-      <p class="eyebrow" style="margin-bottom:12px;">Novo aviso</p>
+      <p class="eyebrow" style="margin-bottom:12px;" id="form-mode-label">Novo aviso</p>
       <form id="form-add-banner">
         <div class="field">
-          <label for="input-banner-image">Imagem do aviso (arte do WhatsApp)</label>
+          <label for="input-banner-image" id="label-banner-image">Imagem do aviso (arte do WhatsApp)</label>
           <input type="file" id="input-banner-image" accept="image/*">
         </div>
         <div class="field">
@@ -514,7 +514,8 @@
           <input type="date" id="input-expires">
         </div>
         <div class="modal-actions">
-          <button type="submit" class="btn-solid">Adicionar à lista</button>
+          <button type="submit" class="btn-solid" id="btn-submit-banner">Adicionar à lista</button>
+          <button type="button" class="btn-plain" id="btn-cancel-edit" hidden>Cancelar edição</button>
         </div>
       </form>
 
@@ -549,6 +550,7 @@
 
   var state = null;
   var adminUnlocked = false;
+  var editingId = null;
 
   function escapeHtml(s){
     return (s||"").replace(/[&<>"']/g, function(c){
@@ -610,17 +612,52 @@
             '<div class="t">'+escapeHtml(b.title)+' <span class="status-pill '+(live?'live':'expired')+'">'+(live?'ativo':'expirado')+'</span></div>' +
             '<div class="s">'+escapeHtml(b.timeLabel||"")+'</div>' +
           '</div>' +
+          '<button type="button" class="btn-plain" style="padding:6px 10px;font-size:11.5px;" data-edit="'+b.id+'">Editar</button>' +
           '<button type="button" class="btn-remove" data-remove="'+b.id+'">Remover</button>' +
         '</div>';
     }).join("");
     wrap.querySelectorAll("[data-remove]").forEach(function(btn){
       btn.addEventListener("click", function(){
-        state.banners = state.banners.filter(function(b){ return b.id !== btn.getAttribute("data-remove"); });
+        var id = btn.getAttribute("data-remove");
+        state.banners = state.banners.filter(function(b){ return b.id !== id; });
+        if(editingId === id) cancelEdit();
         renderAdminList();
         renderBanners();
         showAdminMsg("Removido da lista. Clique em \"Salvar e publicar\" para confirmar para todo mundo.");
       });
     });
+    wrap.querySelectorAll("[data-edit]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        startEdit(btn.getAttribute("data-edit"));
+      });
+    });
+  }
+
+  function startEdit(id){
+    var b = state.banners.find(function(x){ return x.id === id; });
+    if(!b) return;
+    editingId = id;
+    document.getElementById("input-title").value = b.title || "";
+    document.getElementById("input-subtitle").value = b.subtitle || "";
+    document.getElementById("input-timelabel").value = b.timeLabel || "";
+    document.getElementById("input-price").value = b.priceLabel || "";
+    document.getElementById("input-date").value = b.date || "";
+    document.getElementById("input-expires").value = b.expires || "";
+    document.getElementById("input-banner-image").value = "";
+    document.getElementById("form-mode-label").textContent = "Editando aviso";
+    document.getElementById("label-banner-image").textContent = "Nova imagem (opcional — deixe em branco pra manter a atual)";
+    document.getElementById("btn-submit-banner").textContent = "Salvar alterações";
+    document.getElementById("btn-cancel-edit").hidden = false;
+    document.getElementById("form-add-banner").scrollIntoView({block:"nearest"});
+  }
+
+  function cancelEdit(){
+    editingId = null;
+    document.getElementById("form-add-banner").reset();
+    document.getElementById("form-mode-label").textContent = "Novo aviso";
+    document.getElementById("label-banner-image").textContent = "Imagem do aviso (arte do WhatsApp)";
+    document.getElementById("btn-submit-banner").textContent = "Adicionar à lista";
+    document.getElementById("btn-cancel-edit").hidden = true;
   }
 
   function showAdminMsg(text){
@@ -669,6 +706,7 @@
   function closeAdmin(){
     document.getElementById("admin-overlay").hidden = true;
     adminUnlocked = false;
+    cancelEdit();
   }
 
   async function checkPublishAvailable(){
@@ -766,12 +804,10 @@
     var fileInput = document.getElementById("input-banner-image");
     var file = fileInput.files[0];
     var title = document.getElementById("input-title").value.trim();
-    if(!file){ showAdminMsg("Escolha uma imagem para o aviso."); return; }
+    if(!editingId && !file){ showAdminMsg("Escolha uma imagem para o aviso."); return; }
     if(!title){ showAdminMsg("Dê um título para o aviso."); return; }
-    var dataUrl = await resizeImageToDataUrl(file, 900, 0.78);
-    var banner = {
-      id: "b-" + Date.now().toString(36),
-      img: dataUrl,
+
+    var fields = {
       title: title,
       subtitle: document.getElementById("input-subtitle").value.trim(),
       timeLabel: document.getElementById("input-timelabel").value.trim(),
@@ -779,13 +815,29 @@
       date: document.getElementById("input-date").value || "",
       expires: document.getElementById("input-expires").value || ""
     };
-    state.banners.push(banner);
-    renderAdminList();
-    renderBanners();
-    e.target.reset();
-    showAdminMsg('Aviso adicionado à lista. Clique em "Salvar e publicar" para deixar visível para todo mundo.');
+
+    if(editingId){
+      var existing = state.banners.find(function(b){ return b.id === editingId; });
+      if(existing){
+        if(file) existing.img = await resizeImageToDataUrl(file, 900, 0.78);
+        Object.assign(existing, fields);
+      }
+      cancelEdit();
+      renderAdminList();
+      renderBanners();
+      showAdminMsg('Aviso atualizado. Clique em "Salvar e publicar" para confirmar para todo mundo.');
+    }else{
+      var dataUrl = await resizeImageToDataUrl(file, 900, 0.78);
+      var banner = Object.assign({ id: "b-" + Date.now().toString(36), img: dataUrl }, fields);
+      state.banners.push(banner);
+      renderAdminList();
+      renderBanners();
+      e.target.reset();
+      showAdminMsg('Aviso adicionado à lista. Clique em "Salvar e publicar" para deixar visível para todo mundo.');
+    }
   });
 
+  document.getElementById("btn-cancel-edit").addEventListener("click", cancelEdit);
   document.getElementById("btn-publish").addEventListener("click", onPublish);
 
   (async function init(){
