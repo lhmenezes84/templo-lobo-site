@@ -657,6 +657,10 @@
   // então não reaproveite uma senha importante aqui.
   var ADMIN_KEY = "guardiaoaya2026";
 
+  // Endpoint do Cloudflare Worker usado quando a página está fora do Claude
+  // (ex.: tlg.lhlab.com.br). Deixe em branco até o Worker existir.
+  var PUBLISH_ENDPOINT = "";
+
   var state = null;
   var adminUnlocked = false;
   var editingId = null;
@@ -817,6 +821,15 @@
       var res = await fetch("data.json", {cache:"no-store"});
       if(res.ok){ state = await res.json(); return; }
     }catch(e){ /* no data.json published yet — fall back below */ }
+    if(PUBLISH_ENDPOINT){
+      try{
+        var res2 = await fetch(PUBLISH_ENDPOINT + "/data.json", {cache:"no-store"});
+        if(res2.ok){
+          var remote = await res2.json();
+          if(remote && remote.banners && remote.banners.length){ state = remote; return; }
+        }
+      }catch(e){ /* worker fora do ar — cai no fallback abaixo */ }
+    }
     state = JSON.parse(document.getElementById("site-data").textContent);
   }
 
@@ -835,22 +848,21 @@
 
   async function checkPublishAvailable(){
     var note = document.getElementById("admin-capability-note");
-    if(!window.claude || !window.claude.use){
-      note.textContent = "Modo somente leitura: esta página não está aberta dentro do Claude, então as alterações não poderão ser publicadas aqui.";
-      return null;
+    if(window.claude && window.claude.use){
+      try{
+        var cap = await window.claude.use("artifact");
+        if(cap){
+          note.textContent = "Alterações ficam só neste navegador até você clicar em \"Salvar e publicar\".";
+          return cap;
+        }
+      }catch(e){ /* segue para o modo Worker abaixo */ }
     }
-    try{
-      var cap = await window.claude.use("artifact");
-      if(!cap){
-        note.textContent = "Modo somente leitura: publicação indisponível nesta visualização.";
-        return null;
-      }
-      note.textContent = "Alterações ficam só neste navegador até você clicar em \"Salvar e publicar\".";
-      return cap;
-    }catch(e){
-      note.textContent = "Modo somente leitura: não foi possível verificar permissão de publicação.";
-      return null;
+    if(PUBLISH_ENDPOINT){
+      note.textContent = "Alterações ficam só neste navegador até você clicar em \"Salvar e publicar\" (pode levar até 1 minuto para todo mundo ver).";
+      return "worker";
     }
+    note.textContent = "Modo somente leitura: publicação não está configurada nesta página.";
+    return null;
   }
 
   async function onPublish(){
@@ -859,19 +871,34 @@
     btn.textContent = "Publicando...";
     try{
       var cap = window.claude && window.claude.use ? await window.claude.use("artifact") : null;
-      if(!cap){
-        showAdminMsg("Publicação só funciona quando a página está aberta dentro do Claude, com permissão de edição.");
+      state.updatedAt = new Date().toISOString();
+      if(cap){
+        await cap.publish({ "data.json": JSON.stringify(state) });
+        showAdminMsg("Publicado! Quem abrir a página agora já vê as mudanças.");
         return;
       }
-      state.updatedAt = new Date().toISOString();
-      await cap.publish({ "data.json": JSON.stringify(state) });
-      showAdminMsg("Publicado! Quem abrir a página agora já vê as mudanças.");
+      if(PUBLISH_ENDPOINT){
+        var resp = await fetch(PUBLISH_ENDPOINT + "/publish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + ADMIN_KEY },
+          body: JSON.stringify(state)
+        });
+        if(!resp.ok){
+          var errBody = await resp.json().catch(function(){ return {}; });
+          throw { code: errBody.error || ("http_" + resp.status) };
+        }
+        showAdminMsg("Publicado! Pode levar até 1 minuto para todo mundo ver a mudança.");
+        return;
+      }
+      showAdminMsg("Publicação não está configurada nesta página.");
     }catch(err){
       var code = err && err.code;
       if(code === "conflict"){
         showAdminMsg("Alguém salvou uma versão mais nova enquanto você editava. A página vai atualizar sozinha.");
       }else if(code === "not_writer" || code === "not_granted"){
         showAdminMsg("Sua conta não tem permissão de edição neste site. Peça para quem criou a página compartilhar acesso de edição, ou publique pela conta dele.");
+      }else if(code === "unauthorized"){
+        showAdminMsg("Senha de administrador não confere no servidor de publicação.");
       }else{
         showAdminMsg("Não deu para publicar agora" + (code ? " ("+code+")" : "") + ". Tente de novo em instantes.");
       }
