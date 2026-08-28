@@ -567,7 +567,7 @@
       <h2 style="font-size:30px;">Programação e avisos</h2>
       <p class="aside-note"><strong>Para participar</strong> — exceto a Gira de Umbanda de segunda-feira, que é aberta a todos — mande uma mensagem para a Eliane para verificar vaga e colocar seu nome na lista antes de vir.</p>
       <div class="ritmo-cta" style="margin-bottom:30px;">
-        <a class="btn btn-primary" href="https://wa.me/5511975453090?text=Oi%20Eliane!%20Quero%20verificar%20vaga%20e%20colocar%20meu%20nome%20na%20lista%20para%20participar%20das%20atividades." target="_blank" rel="noopener">Falar com a Eliane no WhatsApp</a>
+        <a class="btn btn-primary" href="https://wa.me/5511975453090?text=Oi%20Eliane!%20Quero%20verificar%20vaga%20e%20colocar%20meu%20nome%20na%20lista%20para%20participar%20das%20atividades." target="_blank" rel="noopener">Falar pelo WhatsApp</a>
       </div>
       <div id="banners-grid"></div>
       <p id="banners-empty" hidden>Nenhum aviso especial no momento — confira o ritmo semanal acima ou chame no WhatsApp para saber a próxima data.</p>
@@ -578,7 +578,16 @@
     </div>
   </section>
 
-  <section id="local">
+  <section id="galeria">
+    <div class="wrap">
+      <p class="eyebrow">Galeria</p>
+      <h2 style="font-size:30px;">Momentos da casa</h2>
+      <p class="lede" style="font-size:16px;max-width:640px;">Fotos dos nossos encontros, retiradas do Instagram e Facebook do templo.</p>
+      <div id="gallery-grid" class="gallery-grid"></div>
+    </div>
+  </section>
+
+  <section id="local" style="background:var(--bg-panel);">
     <div class="wrap">
       <p class="eyebrow">Onde estamos</p>
       <h2 style="font-size:30px;">Chegando na casa</h2>
@@ -592,7 +601,7 @@
     </div>
   </section>
 
-  <section id="contato" style="background:var(--bg-panel);">
+  <section id="contato">
     <div class="wrap">
       <p class="eyebrow">Fale com a casa</p>
       <h2 style="font-size:30px;">Contato</h2>
@@ -610,15 +619,6 @@
           <a class="num" href="mailto:temploloboguardiao@gmail.com">temploloboguardiao<wbr>@gmail.com</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section id="galeria">
-    <div class="wrap">
-      <p class="eyebrow">Galeria</p>
-      <h2 style="font-size:30px;">Momentos da casa</h2>
-      <p class="lede" style="font-size:16px;max-width:640px;">Fotos dos nossos encontros, retiradas do Instagram e Facebook do templo.</p>
-      <div id="gallery-grid" class="gallery-grid"></div>
     </div>
   </section>
 </main>
@@ -651,6 +651,20 @@
     <div id="admin-dashboard-step" hidden>
       <h2>Gerenciar avisos</h2>
       <p class="muted" id="admin-capability-note"></p>
+
+      <hr class="sep">
+      <p class="eyebrow" style="margin-bottom:12px;">Redes sociais no topo do site</p>
+      <div class="field-checkbox">
+        <label><input type="checkbox" id="input-show-instagram"> Mostrar botão do Instagram</label>
+      </div>
+      <div class="field-checkbox">
+        <label><input type="checkbox" id="input-show-facebook"> Mostrar botão do Facebook</label>
+      </div>
+
+      <hr class="sep">
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button type="button" class="btn-plain" id="btn-open-gallery-admin">Gerenciar galeria de fotos</button>
+      </div>
 
       <hr class="sep">
       <p class="eyebrow" style="margin-bottom:12px;" id="form-mode-label">Novo aviso</p>
@@ -693,20 +707,43 @@
       <p class="eyebrow" style="margin-bottom:4px;">Avisos cadastrados</p>
       <div class="admin-list" id="admin-list"></div>
 
-      <hr class="sep">
-      <p class="eyebrow" style="margin-bottom:12px;">Redes sociais no topo do site</p>
-      <div class="field-checkbox">
-        <label><input type="checkbox" id="input-show-instagram"> Mostrar botão do Instagram</label>
-      </div>
-      <div class="field-checkbox">
-        <label><input type="checkbox" id="input-show-facebook"> Mostrar botão do Facebook</label>
-      </div>
-
       <p class="admin-msg" id="admin-msg" hidden></p>
 
       <div class="modal-actions">
         <button type="button" class="btn-solid" id="btn-publish">Salvar e publicar</button>
         <button type="button" class="btn-plain" id="btn-close-admin">Fechar</button>
+      </div>
+    </div>
+
+    <div id="admin-gallery-step" hidden>
+      <h2>Gerenciar galeria</h2>
+      <p class="muted">Fotos que aparecem na seção "Momentos da casa" do site.</p>
+
+      <hr class="sep">
+      <p class="eyebrow" style="margin-bottom:12px;">Adicionar foto</p>
+      <form id="form-add-photo">
+        <div class="field">
+          <label for="input-photo-image">Foto</label>
+          <input type="file" id="input-photo-image" accept="image/*">
+        </div>
+        <div class="field">
+          <label for="input-photo-caption">Legenda (aparece sobre a foto, opcional)</label>
+          <input type="text" id="input-photo-caption" placeholder="Ex: Sagrado Feminino">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-solid">Adicionar à galeria</button>
+        </div>
+      </form>
+
+      <hr class="sep">
+      <p class="eyebrow" style="margin-bottom:4px;">Fotos cadastradas</p>
+      <div class="admin-list" id="admin-gallery-list"></div>
+
+      <p class="admin-msg" id="admin-gallery-msg" hidden></p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-solid" id="btn-publish-gallery">Salvar e publicar</button>
+        <button type="button" class="btn-plain" id="btn-back-gallery">Voltar</button>
       </div>
     </div>
   </div>
@@ -902,6 +939,33 @@
     });
   }
 
+  function renderAdminGalleryList(){
+    var wrap = document.getElementById("admin-gallery-list");
+    if(!state.gallery.length){
+      wrap.innerHTML = '<p class="muted" style="padding:14px 0;">Nenhuma foto cadastrada ainda.</p>';
+      return;
+    }
+    wrap.innerHTML = state.gallery.map(function(g, idx){
+      return '' +
+        '<div class="admin-list-row" data-idx="'+idx+'">' +
+          '<img src="'+g.img+'" alt="">' +
+          '<div class="meta">' +
+            '<div class="t">'+escapeHtml(g.caption || "(sem legenda)")+'</div>' +
+          '</div>' +
+          '<button type="button" class="btn-remove" data-remove-photo="'+idx+'">Remover</button>' +
+        '</div>';
+    }).join("");
+    wrap.querySelectorAll("[data-remove-photo]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var idx = parseInt(btn.getAttribute("data-remove-photo"), 10);
+        state.gallery.splice(idx, 1);
+        renderAdminGalleryList();
+        renderGallery();
+        showAdminMsg("Removida da galeria. Clique em \"Salvar e publicar\" para confirmar para todo mundo.", "admin-gallery-msg");
+      });
+    });
+  }
+
   function startEdit(id){
     var b = state.banners.find(function(x){ return x.id === id; });
     if(!b) return;
@@ -929,8 +993,8 @@
     document.getElementById("btn-cancel-edit").hidden = true;
   }
 
-  function showAdminMsg(text){
-    var el = document.getElementById("admin-msg");
+  function showAdminMsg(text, targetId){
+    var el = document.getElementById(targetId || "admin-msg");
     el.textContent = text;
     el.hidden = false;
   }
@@ -986,6 +1050,7 @@
     document.getElementById("admin-overlay").hidden = false;
     document.getElementById("admin-password-step").hidden = false;
     document.getElementById("admin-dashboard-step").hidden = true;
+    document.getElementById("admin-gallery-step").hidden = true;
     document.getElementById("admin-password-input").value = "";
     document.getElementById("admin-password-error").hidden = true;
   }
@@ -1014,8 +1079,9 @@
     return null;
   }
 
-  async function onPublish(){
-    var btn = document.getElementById("btn-publish");
+  async function onPublish(btn, msgTarget){
+    btn = btn || document.getElementById("btn-publish");
+    msgTarget = msgTarget || "admin-msg";
     btn.disabled = true;
     btn.textContent = "Publicando...";
     try{
@@ -1023,7 +1089,7 @@
       state.updatedAt = new Date().toISOString();
       if(cap){
         await cap.publish({ "data.json": JSON.stringify(state) });
-        showAdminMsg("Publicado! Quem abrir a página agora já vê as mudanças.");
+        showAdminMsg("Publicado! Quem abrir a página agora já vê as mudanças.", msgTarget);
         return;
       }
       if(PUBLISH_ENDPOINT){
@@ -1036,20 +1102,20 @@
           var errBody = await resp.json().catch(function(){ return {}; });
           throw { code: errBody.error || ("http_" + resp.status) };
         }
-        showAdminMsg("Publicado! Pode levar até 1 minuto para todo mundo ver a mudança.");
+        showAdminMsg("Publicado! Pode levar até 1 minuto para todo mundo ver a mudança.", msgTarget);
         return;
       }
-      showAdminMsg("Publicação não está configurada nesta página.");
+      showAdminMsg("Publicação não está configurada nesta página.", msgTarget);
     }catch(err){
       var code = err && err.code;
       if(code === "conflict"){
-        showAdminMsg("Alguém salvou uma versão mais nova enquanto você editava. A página vai atualizar sozinha.");
+        showAdminMsg("Alguém salvou uma versão mais nova enquanto você editava. A página vai atualizar sozinha.", msgTarget);
       }else if(code === "not_writer" || code === "not_granted"){
-        showAdminMsg("Sua conta não tem permissão de edição neste site. Peça para quem criou a página compartilhar acesso de edição, ou publique pela conta dele.");
+        showAdminMsg("Sua conta não tem permissão de edição neste site. Peça para quem criou a página compartilhar acesso de edição, ou publique pela conta dele.", msgTarget);
       }else if(code === "unauthorized"){
-        showAdminMsg("Senha de administrador não confere no servidor de publicação.");
+        showAdminMsg("Senha de administrador não confere no servidor de publicação.", msgTarget);
       }else{
-        showAdminMsg("Não deu para publicar agora" + (code ? " ("+code+")" : "") + ". Tente de novo em instantes.");
+        showAdminMsg("Não deu para publicar agora" + (code ? " ("+code+")" : "") + ". Tente de novo em instantes.", msgTarget);
       }
     }finally{
       btn.disabled = false;
@@ -1173,7 +1239,33 @@
   });
 
   document.getElementById("btn-cancel-edit").addEventListener("click", cancelEdit);
-  document.getElementById("btn-publish").addEventListener("click", onPublish);
+  document.getElementById("btn-publish").addEventListener("click", function(){ onPublish(this, "admin-msg"); });
+
+  document.getElementById("btn-open-gallery-admin").addEventListener("click", function(){
+    document.getElementById("admin-dashboard-step").hidden = true;
+    document.getElementById("admin-gallery-step").hidden = false;
+    document.getElementById("admin-gallery-msg").hidden = true;
+    renderAdminGalleryList();
+  });
+  document.getElementById("btn-back-gallery").addEventListener("click", function(){
+    document.getElementById("admin-gallery-step").hidden = true;
+    document.getElementById("admin-dashboard-step").hidden = false;
+  });
+  document.getElementById("btn-publish-gallery").addEventListener("click", function(){ onPublish(this, "admin-gallery-msg"); });
+
+  document.getElementById("form-add-photo").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var fileInput = document.getElementById("input-photo-image");
+    var file = fileInput.files[0];
+    if(!file){ showAdminMsg("Escolha uma foto.", "admin-gallery-msg"); return; }
+    var caption = document.getElementById("input-photo-caption").value.trim();
+    var dataUrl = await resizeImageToDataUrl(file, 900, 0.78);
+    state.gallery.push({ img: dataUrl, caption: caption, alt: caption || "Foto do templo" });
+    renderAdminGalleryList();
+    renderGallery();
+    e.target.reset();
+    showAdminMsg('Foto adicionada à galeria. Clique em "Salvar e publicar" para deixar visível para todo mundo.', "admin-gallery-msg");
+  });
 
   (async function init(){
     await loadState();
