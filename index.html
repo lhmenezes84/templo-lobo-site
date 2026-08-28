@@ -112,12 +112,7 @@
     padding-top:12px;padding-bottom:12px;
   }
   .brand{display:flex;align-items:center;gap:10px;font-family:"Fraunces",serif;font-weight:600;font-size:16px;}
-  .brand-mark{width:26px;height:26px;border-radius:50%;border:1.4px solid var(--gold);position:relative;flex:none;}
-  .brand-mark::before,.brand-mark::after{
-    content:"";position:absolute;top:47%;width:5px;height:8px;background:var(--gold);border-radius:60% 60% 60% 60%/70% 70% 40% 40%;
-  }
-  .brand-mark::before{left:6px;transform:rotate(-8deg);}
-  .brand-mark::after{right:6px;transform:rotate(8deg);}
+  .brand-mark{width:26px;height:26px;flex:none;display:block;}
   .btn-wa-mini{
     font-family:"Space Mono",monospace;font-size:12.5px;letter-spacing:.03em;
     border:1px solid var(--gold);color:var(--gold-strong,var(--gold));
@@ -436,7 +431,21 @@
 <header class="site">
   <div class="wrap">
     <a class="brand" href="#topo" style="text-decoration:none;">
-      <span class="brand-mark" aria-hidden="true"></span>
+      <svg class="brand-mark" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <radialGradient id="eyeGlowMark" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="var(--gold-strong, var(--gold))"/>
+            <stop offset="100%" stop-color="var(--gold)" stop-opacity=".3"/>
+          </radialGradient>
+        </defs>
+        <polygon points="16,6 38,36 30,50 34,78 60,112 86,78 90,50 82,36 104,6 60,20" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.7" stroke-linejoin="round"/>
+        <ellipse cx="45" cy="56" rx="9" ry="6" fill="url(#eyeGlowMark)" transform="rotate(-8 45 56)"/>
+        <ellipse cx="75" cy="56" rx="9" ry="6" fill="url(#eyeGlowMark)" transform="rotate(8 75 56)"/>
+        <line x1="45" y1="56" x2="45" y2="60" stroke="var(--bg)" stroke-width="2.4"/>
+        <line x1="75" y1="56" x2="75" y2="60" stroke="var(--bg)" stroke-width="2.4"/>
+        <line x1="60" y1="66" x2="60" y2="85" stroke="var(--gold)" stroke-width=".7" opacity=".5"/>
+        <polygon points="55,85 65,85 60,94" fill="var(--gold)"/>
+      </svg>
       Templo Lobo Guardião Aya
     </a>
     <div class="header-actions">
@@ -494,14 +503,13 @@
               <stop offset="100%" stop-color="var(--gold)" stop-opacity=".3"/>
             </radialGradient>
           </defs>
-          <polygon points="30,22 20,4 40,14" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
-          <polygon points="90,22 100,4 80,14" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.4"/>
-          <circle cx="60" cy="60" r="46" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.6"/>
-          <circle cx="60" cy="60" r="40" fill="none" stroke="var(--gold)" stroke-width=".6" opacity=".5"/>
-          <ellipse cx="44" cy="60" rx="9" ry="6" fill="url(#eyeGlow)" transform="rotate(-8 44 60)"/>
-          <ellipse cx="76" cy="60" rx="9" ry="6" fill="url(#eyeGlow)" transform="rotate(8 76 60)"/>
-          <line x1="44" y1="60" x2="44" y2="64" stroke="var(--bg)" stroke-width="2.4"/>
-          <line x1="76" y1="60" x2="76" y2="64" stroke="var(--bg)" stroke-width="2.4"/>
+          <polygon points="16,6 38,36 30,50 34,78 60,112 86,78 90,50 82,36 104,6 60,20" fill="var(--bg)" stroke="var(--gold)" stroke-width="1.7" stroke-linejoin="round"/>
+          <ellipse cx="45" cy="56" rx="9" ry="6" fill="url(#eyeGlow)" transform="rotate(-8 45 56)"/>
+          <ellipse cx="75" cy="56" rx="9" ry="6" fill="url(#eyeGlow)" transform="rotate(8 75 56)"/>
+          <line x1="45" y1="56" x2="45" y2="60" stroke="var(--bg)" stroke-width="2.4"/>
+          <line x1="75" y1="56" x2="75" y2="60" stroke="var(--bg)" stroke-width="2.4"/>
+          <line x1="60" y1="66" x2="60" y2="85" stroke="var(--gold)" stroke-width=".7" opacity=".5"/>
+          <polygon points="55,85 65,85 60,94" fill="var(--gold)"/>
         </svg>
         <p class="eyebrow">Espiritualidade & Medicina da Floresta · Freguesia do Ó, São Paulo</p>
         <h1 class="hero-title">Templo Lobo Guardião Aya</h1>
