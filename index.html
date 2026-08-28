@@ -220,6 +220,7 @@
   .gallery-grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:32px;
   }
+  .gallery-grid[hidden]{display:none;}
   .gallery-item{
     position:relative;cursor:zoom-in;border-radius:4px;overflow:hidden;
     background:var(--bg-panel-2);border:1px solid var(--line);aspect-ratio:1/1;
@@ -629,6 +630,10 @@
       <h2 style="font-size:30px;">Momentos da casa</h2>
       <p class="lede" style="font-size:16px;max-width:640px;">Fotos dos nossos encontros, retiradas do Instagram e Facebook do templo.</p>
       <div id="gallery-grid" class="gallery-grid"></div>
+      <div class="past-toggle-row" id="gallery-more-row" hidden>
+        <button type="button" class="btn-toggle-past" id="btn-toggle-gallery" aria-expanded="false">Mostrar mais fotos (<span id="gallery-more-count">0</span>)</button>
+      </div>
+      <div id="gallery-grid-more" class="gallery-grid" hidden></div>
     </div>
   </section>
 
@@ -927,14 +932,33 @@
       '</div>';
   }
 
+  var GALLERY_PAGE_SIZE = 4;
+
   function renderGallery(){
     var grid = document.getElementById("gallery-grid");
     if(!grid) return;
-    var items = state.gallery || [];
-    grid.innerHTML = items.map(function(g, idx){
-      if(!g.photos || !g.photos.length) return "";
-      return galleryItemHtml(g, idx);
-    }).join("");
+    var moreGrid = document.getElementById("gallery-grid-more");
+    var moreRow = document.getElementById("gallery-more-row");
+    var items = (state.gallery || []).map(function(g, idx){ return { g: g, idx: idx }; })
+      .filter(function(entry){ return entry.g.photos && entry.g.photos.length; });
+
+    var first = items.slice(0, GALLERY_PAGE_SIZE);
+    var rest = items.slice(GALLERY_PAGE_SIZE);
+
+    grid.innerHTML = first.map(function(entry){ return galleryItemHtml(entry.g, entry.idx); }).join("");
+
+    if(rest.length){
+      moreGrid.innerHTML = rest.map(function(entry){ return galleryItemHtml(entry.g, entry.idx); }).join("");
+      moreRow.hidden = false;
+      document.getElementById("gallery-more-count").textContent = rest.length;
+    }else{
+      moreGrid.innerHTML = "";
+      moreGrid.hidden = true;
+      moreRow.hidden = true;
+      var btn = document.getElementById("btn-toggle-gallery");
+      btn.setAttribute("aria-expanded", "false");
+      btn.childNodes[0].textContent = "Mostrar mais fotos (";
+    }
   }
 
   function applySocialVisibility(){
@@ -1041,7 +1065,10 @@
         '<div class="admin-gallery-group">' +
           '<div class="admin-gallery-group-head">' +
             '<div class="t">'+escapeHtml(g.caption || "(sem legenda)")+' <span class="status-pill live">'+g.photos.length+' foto'+(g.photos.length>1?'s':'')+'</span></div>' +
-            '<button type="button" class="btn-remove" data-remove-group="'+gi+'">Remover grupo</button>' +
+            '<div style="display:flex;gap:8px;">' +
+              '<button type="button" class="btn-plain" style="padding:6px 10px;font-size:11.5px;" data-rename-group="'+gi+'">Renomear</button>' +
+              '<button type="button" class="btn-remove" data-remove-group="'+gi+'">Remover grupo</button>' +
+            '</div>' +
           '</div>' +
           (g.photos.length > 1 ? '<p class="muted" style="font-size:12.5px;margin-bottom:8px;">Clique numa foto para deixá-la como capa (a que aparece na página inicial).</p>' : '') +
           '<div class="admin-photo-thumbs">'+thumbs+'</div>' +
@@ -1054,6 +1081,21 @@
         renderAdminGalleryList();
         renderGallery();
         showAdminMsg("Grupo removido da galeria. Clique em \"Salvar e publicar\" para confirmar para todo mundo.", "admin-gallery-msg");
+      });
+    });
+    wrap.querySelectorAll("[data-rename-group]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var gi = parseInt(btn.getAttribute("data-rename-group"), 10);
+        var g = state.gallery[gi];
+        if(!g) return;
+        var novaLegenda = window.prompt("Nova legenda para este grupo de fotos:", g.caption || "");
+        if(novaLegenda === null) return; // cancelou
+        novaLegenda = novaLegenda.trim();
+        g.caption = novaLegenda;
+        g.alt = novaLegenda || g.alt || "Foto do templo";
+        renderAdminGalleryList();
+        renderGallery();
+        showAdminMsg('Legenda atualizada. Clique em "Salvar e publicar" para confirmar para todo mundo.', "admin-gallery-msg");
       });
     });
     wrap.querySelectorAll("[data-set-cover]").forEach(function(img){
@@ -1310,6 +1352,13 @@
     this.setAttribute("aria-expanded", String(!expanded));
     var count = document.getElementById("past-count").textContent;
     this.childNodes[0].textContent = expanded ? "Mostrar eventos anteriores (" : "Ocultar eventos anteriores (";
+  });
+  document.getElementById("btn-toggle-gallery").addEventListener("click", function(){
+    var moreGrid = document.getElementById("gallery-grid-more");
+    var expanded = !moreGrid.hidden;
+    moreGrid.hidden = expanded;
+    this.setAttribute("aria-expanded", String(!expanded));
+    this.childNodes[0].textContent = expanded ? "Mostrar mais fotos (" : "Ocultar fotos extras (";
   });
   document.getElementById("lightbox").addEventListener("click", function(e){
     if(e.target.id === "lightbox" ) closeLightbox();
