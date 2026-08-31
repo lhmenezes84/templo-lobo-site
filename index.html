@@ -713,10 +713,16 @@
       <hr class="sep">
       <p class="eyebrow" style="margin-bottom:12px;">Redes sociais no topo do site</p>
       <div class="field-checkbox">
-        <label><input type="checkbox" id="input-show-instagram"> Mostrar botão do Instagram</label>
+        <label><input type="checkbox" id="input-show-instagram"> Mostrar botão do Instagram.</label>
       </div>
       <div class="field-checkbox">
-        <label><input type="checkbox" id="input-show-facebook"> Mostrar botão do Facebook</label>
+        <label><input type="checkbox" id="input-show-facebook"> Mostrar botão do Facebook.</label>
+      </div>
+
+      <hr class="sep">
+      <p class="eyebrow" style="margin-bottom:12px;">Seções do site</p>
+      <div class="field-checkbox">
+        <label><input type="checkbox" id="input-show-rape"> Mostrar area de oferta de rapés.</label>
       </div>
 
       <hr class="sep">
@@ -978,6 +984,11 @@
     if(fb) fb.style.display = (social.showFacebook === false) ? "none" : "";
   }
 
+  function applyAreaVisibility(){
+  var el = document.getElementById("rapes");
+  if(el) el.style.display = (state.showRape === false) ? "none" : "";
+}
+
   function renderBanners(){
     var grid = document.getElementById("banners-grid");
     var empty = document.getElementById("banners-empty");
@@ -1229,6 +1240,7 @@
       // pra sempre até alguém editar e publicar de novo pelo painel.
       if(!state.gallery || !state.gallery.length) state.gallery = fallback.gallery || [];
       if(!state.social) state.social = fallback.social || { showInstagram: true, showFacebook: true };
+      if(state.showRape === undefined) state.showRape = (fallback.showRape !== undefined) ? fallback.showRape : true;
     }
     try{
       var res = await fetch("data.json", {cache:"no-store"});
@@ -1444,6 +1456,7 @@
       checkPublishAvailable();
       document.getElementById("input-show-instagram").checked = state.social.showInstagram !== false;
       document.getElementById("input-show-facebook").checked = state.social.showFacebook !== false;
+      document.getElementById("input-show-rape").checked = state.showRape !== false;
     }else{
       document.getElementById("admin-password-error").hidden = false;
     }
@@ -1456,6 +1469,10 @@
   document.getElementById("input-show-facebook").addEventListener("change", function(){
     state.social.showFacebook = this.checked;
     applySocialVisibility();
+  });
+  document.getElementById("input-show-rape").addEventListener("change", function(){
+  state.showRape = this.checked;
+  applyAreaVisibility();
   });
 
   document.getElementById("form-add-banner").addEventListener("submit", async function(e){
@@ -1554,9 +1571,11 @@
     if(!state.gallery) state.gallery = [];
     state.gallery = migrateGalleryShape(state.gallery);
     if(!state.social) state.social = { showInstagram: true, showFacebook: true };
+    if(state.showRape === undefined) state.showRape = true;
     renderBanners();
     renderGallery();
     applySocialVisibility();
+    applyAreaVisibility();
   })();
 })();
 </script>
